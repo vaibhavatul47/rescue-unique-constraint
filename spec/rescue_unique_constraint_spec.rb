@@ -21,7 +21,7 @@ describe RescueUniqueConstraint do
 
   class Thing < ActiveRecord::Base
     include RescueUniqueConstraint
-    rescue_unique_constraint index: "idx_things_on_name_unique", field: "name"
+    rescue_unique_constraint index: "idx_things_on_name_unique", field: "name", message: "Everything should have unique NAME"
     rescue_unique_constraint index: "idx_things_on_test_unique", field: "test"
     rescue_unique_constraint index: "idx_things_on_code_and_score_unique", field: "score"
   end
@@ -35,10 +35,10 @@ describe RescueUniqueConstraint do
     dupe = Thing.new(name: "foo", test: 'baz', code: 456, score: 2000)
     expect(dupe.save).to eql false
     expect(dupe.errors.messages.keys).to contain_exactly(:name)
-    expect(dupe.errors[:name].first).to match /has already been taken/
+    expect(dupe.errors[:name].first).to match /Everything should have unique NAME/
   end
 
-  it "adds error message to atrribute which caused unique-voilation" do
+  it "adds default error message to atrribute which caused unique-voilation" do
     thing = Thing.create(name: "foo", test: 'bar', code: 123, score: 1000)
     dupe = Thing.new(name: "lorem", test: 'bar', code: 456, score: 2000)
     expect(dupe.save).to eql false

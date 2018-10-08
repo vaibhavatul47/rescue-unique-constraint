@@ -6,8 +6,8 @@ module RescueUniqueConstraint
       @indexes_to_rescue_on = []
     end
 
-    def add_index(index, field)
-      indexes_to_rescue_on << Index.new(index, field)
+    def add_index(index, field, message)
+      indexes_to_rescue_on << Index.new(index, field, message)
     end
 
     def matching_indexes(e)
